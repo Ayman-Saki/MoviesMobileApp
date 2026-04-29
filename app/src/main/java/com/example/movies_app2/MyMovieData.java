@@ -4,17 +4,15 @@ public class MyMovieData {
 
     private int movieId;
     private String movieName;
-    private String moviDate;
-    private Integer movieImage;
-
+    private String movieDate;
+    private String movieImage;
     private String movieDescription;
 
-    public MyMovieData(int movieId, String movieName, String moviDate, Integer movieImage, String movieDescription) {
+    public MyMovieData(int movieId, String movieName, String movieDate, String movieImage) {
         this.movieId = movieId;
         this.movieName = movieName;
-        this.moviDate = moviDate;
+        this.movieDate = movieDate;
         this.movieImage = movieImage;
-        this.movieDescription = movieDescription;
     }
 
     public int getMovieId() {
@@ -25,35 +23,15 @@ public class MyMovieData {
         return movieName;
     }
 
-    public String getMoviDate() {
-        return moviDate;
+    public String getMovieDate() {
+        return movieDate;
     }
 
-    public Integer getMovieImage() {
+    public String getMovieImage() {
         return movieImage;
     }
 
     public String getMovieDescription() {
         return movieDescription;
-    }
-
-    public void setMovieId(int movieId) {
-        this.movieId = movieId;
-    }
-
-    public void setMovieName(String movieName) {
-        this.movieName = movieName;
-    }
-
-    public void setMoviDate(String moviDate) {
-        this.moviDate = moviDate;
-    }
-
-    public void setMovieImage(Integer movieImage) {
-        this.movieImage = movieImage;
-    }
-
-    public void setMovieDescription(String movieDescription) {
-        this.movieDescription = movieDescription;
     }
 }
