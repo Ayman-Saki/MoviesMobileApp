@@ -29,7 +29,7 @@
             android:name=".activityvideoplayer"
             android:exported="false" />
         <activity
-            android:name=".MovieDetailsactivity"
+            android:name=".MovieDetailsActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

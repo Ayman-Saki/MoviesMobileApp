@@ -22,46 +22,54 @@ import java.util.List;
 public class MyMovieAdapter extends RecyclerView.Adapter<MyMovieAdapter.ViewHolder>
         implements Filterable {
 
-    MyMovieData[] original;
-    List<MyMovieData> filtered;
-    Context context;
+    private final MyMovieData[] originalData;
+    private List<MyMovieData> filteredData;
+    private final Context context;
 
     public MyMovieAdapter(Context context, MyMovieData[] data) {
         this.context = context;
-        this.original = data;
-        this.filtered = new ArrayList<>(Arrays.asList(data));
+        this.originalData = data;
+        this.filteredData = new ArrayList<>(Arrays.asList(data));
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.movies_list, parent, false);
+
         return new ViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        MyMovieData movie = filtered.get(position);
+        MyMovieData movie = filteredData.get(position);
 
         holder.name.setText(movie.getMovieName());
         holder.date.setText(movie.getMovieDate());
 
         String imageUrl = "https://image.tmdb.org/t/p/w500" + movie.getMovieImage();
 
-        Glide.with(context).load(imageUrl).into(holder.image);
+        Glide.with(context)
+                .load(imageUrl)
+                .into(holder.image);
 
+        // CLICK ITEM → OPEN DETAILS
         holder.itemView.setOnClickListener(v -> {
-            Intent i = new Intent(context, MovieDetailsactivity.class);
-            i.putExtra("movieId", movie.getMovieId());
-            context.startActivity(i);
+
+            Intent intent = new Intent(context, MovieDetailsActivity.class);
+
+            intent.putExtra("movieId", movie.getMovieId());
+
+            context.startActivity(intent);
         });
     }
 
     @Override
     public int getItemCount() {
-        return filtered.size();
+        return filteredData.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -78,34 +86,39 @@ public class MyMovieAdapter extends RecyclerView.Adapter<MyMovieAdapter.ViewHold
         }
     }
 
+    // 🔍 SEARCH FILTER
     @Override
     public Filter getFilter() {
         return new Filter() {
+
             @Override
-            protected FilterResults performFiltering(CharSequence c) {
+            protected FilterResults performFiltering(CharSequence constraint) {
 
-                List<MyMovieData> list = new ArrayList<>();
+                List<MyMovieData> filteredList = new ArrayList<>();
 
-                if (c == null || c.length() == 0) {
-                    list.addAll(Arrays.asList(original));
+                if (constraint == null || constraint.length() == 0) {
+                    filteredList.addAll(Arrays.asList(originalData));
                 } else {
-                    String f = c.toString().toLowerCase();
 
-                    for (MyMovieData m : original) {
-                        if (m.getMovieName().toLowerCase().contains(f)) {
-                            list.add(m);
+                    String filterPattern = constraint.toString().toLowerCase().trim();
+
+                    for (MyMovieData movie : originalData) {
+                        if (movie.getMovieName().toLowerCase().contains(filterPattern)) {
+                            filteredList.add(movie);
                         }
                     }
                 }
 
-                FilterResults r = new FilterResults();
-                r.values = list;
-                return r;
+                FilterResults results = new FilterResults();
+                results.values = filteredList;
+                return results;
             }
 
             @Override
-            protected void publishResults(CharSequence c, FilterResults r) {
-                filtered = (List<MyMovieData>) r.values;
+            @SuppressWarnings("unchecked")
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+
+                filteredData = (List<MyMovieData>) results.values;
                 notifyDataSetChanged();
             }
         };
